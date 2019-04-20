@@ -201,6 +201,7 @@ void makeBlackHoleParticle( Vec2f pos, Vec2f vel )
 	{
 		p.Z = 500.0f;
 		p.bounce = 0.1f;
+    	p.fastcollision = true;
 		p.gravity = Vec2f(0,0);
 		p.emiteffect = emitEffect;
 	}
@@ -225,6 +226,7 @@ void makeManaDrainParticles( Vec2f pos, int amount )
         p.timeout = 10 + _sprk_r2.NextRanged(30);
         p.scale = 1.0f + _sprk_r2.NextFloat();
         p.damping = 0.6f;
+    	p.fastcollision = true;
 		p.gravity = Vec2f(0,0);
 		p.emiteffect = emitEffect;
     }
@@ -256,6 +258,7 @@ void blast(Vec2f pos, int amount)
 		
         p.scale = 0.5f + _blast_r.NextFloat()*0.5f;
         p.damping = 0.9f;
+    	p.fastcollision = true;
 		p.Z = 200.0f;
 		p.lighting = false;
     }
@@ -274,7 +277,7 @@ void sparks(Vec2f pos, int amount)
 		int colorShade = _sprk_r.NextRanged(128);
         CParticle@ p = ParticlePixel( pos, vel, SColor( 255, colorShade, colorShade, colorShade), true );
         if(p is null) return; //bail if we stop getting particles
-
+    	p.fastcollision = true;
         p.timeout = 40 + _sprk_r.NextRanged(20);
         p.scale = 0.5f + _sprk_r.NextFloat();
         p.damping = 0.95f;

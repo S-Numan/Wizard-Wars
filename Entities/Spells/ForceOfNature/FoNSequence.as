@@ -111,7 +111,7 @@ void updateFoNParticle( CParticle@ p )
 Random _sprk_r(12345);
 void makeFoNParticle(CBlob@ this, Vec2f pos, Vec2f vel )
 {
-	if ( !getNet().isClient() )
+	if (isServer())
 		return;
 
 	u8 emitEffect = GetCustomEmitEffectID( "FoNEmit" );
@@ -131,6 +131,7 @@ void makeFoNParticle(CBlob@ this, Vec2f pos, Vec2f vel )
 	{
 		p.Z = 500.0f;
 		p.bounce = 0.1f;
+    	p.fastcollision = true;
 		p.gravity = Vec2f(0,0);
 		p.emiteffect = emitEffect;
 	}
@@ -150,6 +151,7 @@ void sparks(Vec2f pos, int amount)
         CParticle@ p = ParticlePixel( pos, vel, SColor( 255, colorShade, 255, colorShade), true );
         if(p is null) return; //bail if we stop getting particles
 
+    	p.fastcollision = true;
         p.timeout = 40 + _sprk_r.NextRanged(20);
         p.scale = 0.5f + _sprk_r.NextFloat();
         p.damping = 0.95f;

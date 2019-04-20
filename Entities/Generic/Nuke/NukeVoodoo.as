@@ -53,7 +53,6 @@ void onTick( CBlob@ this )
 
 void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
 {
-    bool isServer = getNet().isServer();
 
     if (cmd == this.getCommandID("activate"))
     {

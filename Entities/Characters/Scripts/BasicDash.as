@@ -39,6 +39,8 @@ void onTick( CBlob@ this )
 								0.0f, true );
 				if (p !is null)
 				{
+                    p.bounce = 0;
+                    p.fastcollision = true;
 					p.collides = true;
 				}
 			}

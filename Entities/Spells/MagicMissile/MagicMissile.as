@@ -217,6 +217,8 @@ void makeSmokeParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 	CParticle@ p = ParticleAnimated( "MissileFire1.png", this.getPosition()+random, Vec2f(0,0), float(XORRandom(360)), 0.5f, 6, 0.0f, false );
 	if ( p !is null)
 	{
+		p.bounce = 0;
+    	p.fastcollision = true;
 		p.Z = 300.0f;
 		p.growth = -0.01f;
 	}
@@ -315,7 +317,7 @@ void blast(Vec2f pos, int amount)
         Vec2f vel(_blast_r.NextFloat() * 2.5f, 0);
         vel.RotateBy(_blast_r.NextFloat() * 360.0f);
 
-        CParticle@ p = ParticleAnimated( CFileMatcher("GenericBlast6.png").getFirst(), 
+        CParticle@ p = ParticleAnimated("GenericBlast6.png", 
 									pos, 
 									vel, 
 									float(XORRandom(360)), 
@@ -326,6 +328,7 @@ void blast(Vec2f pos, int amount)
 									
         if(p is null) return; //bail if we stop getting particles
 		
+    	p.fastcollision = true;
         p.scale = 0.5f + _blast_r.NextFloat()*0.5f;
         p.damping = 0.85f;
 		p.Z = 200.0f;

@@ -98,6 +98,8 @@ void makeSmokeParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 	CParticle@ p = ParticleAnimated( "GenericBlast6.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.0f, false );
 	if ( p !is null)
 	{
+		p.bounce = 0;
+    	p.fastcollision = true;
 		p.Z = -10.0f;
 	}
 	

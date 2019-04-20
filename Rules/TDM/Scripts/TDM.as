@@ -807,7 +807,6 @@ void Reset(CRules@ this)
 	this.set("core", @core);
 	this.set("start_gametime", getGameTime() + core.warmUpTime);
 	this.set_u32("game_end_time", getGameTime() + core.gameDuration); //for TimeToEnd.as
-	print("Rules script restarted");
 }
 
 void onRestart(CRules@ this)

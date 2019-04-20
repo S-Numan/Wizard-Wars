@@ -206,6 +206,8 @@ void makeSmokeParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 	CParticle@ p = ParticleAnimated( "RocketFire1.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.0f, false );
 	if ( p !is null)
 	{
+		p.bounce = 0;
+    	p.fastcollision = true;
 		p.Z = 300.0f;
 	}
 	
@@ -245,7 +247,8 @@ void blast(Vec2f pos, int amount)
 									false );
 									
         if(p is null) return; //bail if we stop getting particles
-		
+
+    	p.fastcollision = true;
         p.scale = 0.75f + _blast_r.NextFloat()*0.5f;
         p.damping = 0.85f;
 		p.Z = 200.0f;
@@ -274,7 +277,8 @@ void smoke(Vec2f pos, int amount)
 									false );
 									
         if(p is null) return; //bail if we stop getting particles
-		
+
+    	p.fastcollision = true;
         p.scale = 1.0f + _smoke_r.NextFloat()*0.5f;
         p.damping = 0.8f;
 		p.Z = 200.0f;

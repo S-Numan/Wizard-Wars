@@ -40,8 +40,8 @@ void onInit( CBlob @ this )
 void RenderTrailFunction(CBlob@ this, int id)
 {
 
-	if(!getNet().isClient()) 
-		return;	
+	/*if(!getNet().isClient()) 
+		return;	*/ //not needed, servers dont run render stuff, they only run onTick
 	
 	CSprite@ thisSprite = this.getSprite();
 	Vec2f thisPos = this.getPosition();

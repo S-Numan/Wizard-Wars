@@ -125,10 +125,13 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 	}
 	else
 	{
-		CBlob@ icePrison = server_CreateBlob( "ice_prison", this.getTeamNum(), this.getPosition() );
-		if ( icePrison !is null )
+		if(isServer())
 		{
-			icePrison.AddScript("CheapFakeRolling.as");
+			CBlob@ icePrison = server_CreateBlob( "ice_prison", this.getTeamNum(), this.getPosition() );
+			if ( icePrison !is null )
+			{
+				icePrison.AddScript("CheapFakeRolling.as");
+			}
 		}
 	}
 }
@@ -138,24 +141,27 @@ void Freeze(CBlob@ blob, f32 frozenTime)
 	blob.getShape().getConsts().collideWhenAttached = false;
 
 	Vec2f blobPos = blob.getPosition();
-	
-	CBlob@ icePrison = server_CreateBlob( "ice_prison", blob.getTeamNum(), blobPos );
-	if ( icePrison !is null )
+	if(isServer())
 	{
-		AttachmentPoint@ ap = icePrison.getAttachments().getAttachmentPointByName("PICKUP2");
-		if ( ap !is null )
+		CBlob@ icePrison = server_CreateBlob( "ice_prison", blob.getTeamNum(), blobPos );
+		if ( icePrison !is null )
 		{
-			icePrison.server_AttachTo(blob, "PICKUP2");
+			AttachmentPoint@ ap = icePrison.getAttachments().getAttachmentPointByName("PICKUP2");
+			if ( ap !is null )
+			{
+				icePrison.server_AttachTo(blob, "PICKUP2");
+			}
+			
+			//CSpriteLayer@ iceLayer = icePrison.getSprite().getSpriteLayer( "IcePrison" );
+			//if(iceLayer !is null)
+			//{			
+			//	iceLayer.ScaleBy(Vec2f( (blobRadius + 4.0f)/prisonRadius, (blobRadius + 4.0f)/prisonRadius));
+			//}
+			
+			icePrison.server_SetTimeToDie(frozenTime);
 		}
-		
-		//CSpriteLayer@ iceLayer = icePrison.getSprite().getSpriteLayer( "IcePrison" );
-		//if(iceLayer !is null)
-		//{			
-		//	iceLayer.ScaleBy(Vec2f( (blobRadius + 4.0f)/prisonRadius, (blobRadius + 4.0f)/prisonRadius));
-		//}
-		
-		icePrison.server_SetTimeToDie(frozenTime);
 	}
+
 }
 
 void onDie(CBlob@ this)
@@ -224,6 +230,8 @@ void makeSmokeParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 	CParticle@ p = ParticleAnimated( "Sparkle" + (XORRandom(3)+1) + ".png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.0f, false );
 	if ( p !is null)
 	{
+		p.bounce = 0;
+    	p.fastcollision = true;
 		p.Z = 400.0f;
 	}
 	
@@ -262,7 +270,8 @@ void blast(Vec2f pos, int amount)
 									false );
 									
         if(p is null) return; //bail if we stop getting particles
-		
+
+    	p.fastcollision = true;
         p.damping = 0.85f;
 		p.Z = 500.0f;
 		p.lighting = false;
@@ -280,7 +289,7 @@ void smoke(Vec2f pos, int amount)
         Vec2f vel(4.0f + _smoke_r.NextFloat() * 4.0f, 0);
         vel.RotateBy(_smoke_r.NextFloat() * 360.0f);
 
-        CParticle@ p = ParticleAnimated( CFileMatcher("GenericSmoke2.png").getFirst(), 
+        CParticle@ p = ParticleAnimated( "GenericSmoke2.png", 
 									pos, 
 									vel, 
 									float(XORRandom(360)), 
@@ -291,6 +300,8 @@ void smoke(Vec2f pos, int amount)
 									
         if(p is null) return; //bail if we stop getting particles
 		
+
+    	p.fastcollision = true;
         p.scale = 0.5f + _smoke_r.NextFloat()*0.5f;
         p.damping = 0.8f;
 		p.Z = 200.0f;

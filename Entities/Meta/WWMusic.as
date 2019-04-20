@@ -63,10 +63,10 @@ void AddGameMusic(CBlob@ this, CMixer@ mixer)
 	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/MuteCity.ogg", world_home);
 	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/Targets.ogg", world_home);
 	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/TheTouch.ogg", world_home);
-	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/music_ssbu.ogg", world_home);
-	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/RainbowRoad.ogg", world_home);
-	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/Hyrule.ogg", world_home);
-	mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/GreenHills.ogg", world_home);
+	//mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/music_ssbu.ogg", world_home);
+	//mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/RainbowRoad.ogg", world_home);
+	//mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/Hyrule.ogg", world_home);
+	//mixer.AddTrack("../Mods/WizardWars_Music/Sounds/Music/GreenHills.ogg", world_home);
 }
 
 uint timer = 0;

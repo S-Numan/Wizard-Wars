@@ -341,7 +341,7 @@ void lightningSparks(Vec2f pos, int amount)
 Random _blast_r(0x10002);
 void blast(Vec2f pos, int amount)
 {
-	if (isClient())
+	if (getNet().isServer())
 		return;
 
 	for (int i = 0; i < amount; i++)

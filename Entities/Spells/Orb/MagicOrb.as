@@ -109,6 +109,7 @@ void sparks(Vec2f pos, int amount)
         CParticle@ p = ParticlePixel( pos, vel, SColor( 255, 255, 128+_sprk_r.NextRanged(128), _sprk_r.NextRanged(128)), true );
         if(p is null) return; //bail if we stop getting particles
 
+    	p.fastcollision = true;
         p.timeout = 10 + _sprk_r.NextRanged(20);
         p.scale = 0.5f + _sprk_r.NextFloat();
         p.damping = 0.95f;

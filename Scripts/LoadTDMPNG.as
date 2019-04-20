@@ -18,6 +18,7 @@ class TDMPNGLoader : PNGLoader
 	//override this to extend functionality per-pixel.
 	void handlePixel(SColor pixel, int offset)
 	{
+		print("Hi world!!");
 		PNGLoader::handlePixel(pixel, offset);
 
 		// TRADING POST

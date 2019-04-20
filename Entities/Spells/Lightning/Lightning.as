@@ -330,6 +330,7 @@ void lightningSparks(Vec2f pos, int amount)
         CParticle@ p = ParticlePixel( pos, vel, SColor( 255, 200+_sprk_r.NextRanged(55), 200+_sprk_r.NextRanged(55), 255), true );
         if(p is null) return; //bail if we stop getting particles
 		
+    	p.fastcollision = true;
 		p.gravity = Vec2f(0.0f,0.1f);
         p.timeout = 20 + _sprk_r.NextRanged(20);
         p.scale = 1.0f + _sprk_r.NextFloat();
@@ -340,7 +341,7 @@ void lightningSparks(Vec2f pos, int amount)
 Random _blast_r(0x10002);
 void blast(Vec2f pos, int amount)
 {
-	if ( !getNet().isClient() )
+	if (isClient())
 		return;
 
 	for (int i = 0; i < amount; i++)
@@ -348,7 +349,7 @@ void blast(Vec2f pos, int amount)
         Vec2f vel(_blast_r.NextFloat() * 2.0f, 0);
         vel.RotateBy(_blast_r.NextFloat() * 360.0f);
 
-        CParticle@ p = ParticleAnimated( CFileMatcher("GenericBlast6.png").getFirst(), 
+        CParticle@ p = ParticleAnimated("GenericBlast6.png", 
 									pos, 
 									vel, 
 									float(XORRandom(360)), 
@@ -359,6 +360,7 @@ void blast(Vec2f pos, int amount)
 									
         if(p is null) return; //bail if we stop getting particles
 		
+    	p.fastcollision = true;
         p.scale = 0.5f + _blast_r.NextFloat()*0.5f;
         p.damping = 0.85f;
 		p.Z = 300.0f;

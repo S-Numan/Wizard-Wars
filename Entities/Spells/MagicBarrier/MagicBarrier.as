@@ -91,6 +91,7 @@ void shieldSparks(Vec2f pos, int amountPerFan, f32 orientation, int teamNum)
         CParticle@ p = ParticlePixel( pos, vel, col, true );
         if(p is null) return; //bail if we stop getting particles
 
+    	p.fastcollision = true;
         p.timeout = 10 + _sprk_r.NextRanged(30);
         p.scale = 1.0f + _sprk_r.NextFloat();
         p.damping = 0.97f;
@@ -108,6 +109,7 @@ void shieldSparks(Vec2f pos, int amountPerFan, f32 orientation, int teamNum)
         CParticle@ p = ParticlePixel( pos, vel, col, false );
         if(p is null) return; //bail if we stop getting particles
 
+    	p.fastcollision = true;
         p.timeout = 10 + _sprk_r.NextRanged(30);
         p.scale = 1.0f + _sprk_r.NextFloat();
         p.damping = 0.97f;

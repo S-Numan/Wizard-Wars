@@ -55,6 +55,8 @@ void onTick( CBlob@ this)
 					CParticle@ p = ParticleAnimated( "MissileFire1.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.2f, false );
 					if ( p !is null)
 					{
+						p.bounce = 0;
+    					p.fastcollision = true;
 						if ( XORRandom(2) == 0 )
 							p.Z = 10.0f;
 						else
@@ -95,6 +97,8 @@ void onTick( CBlob@ this)
 					CParticle@ p = ParticleAnimated( "MissileFire4.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.2f, false );
 					if ( p !is null)
 					{
+						p.bounce = 0;
+    					p.fastcollision = true;
 						if ( XORRandom(2) == 0 )
 							p.Z = 10.0f;
 						else

@@ -1,5 +1,5 @@
-#include "/Entities/Common/Attacks/Hitters.as";	   
-#include "/Entities/Common/Attacks/LimitedAttacks.as";
+#include "Hitters.as";	   
+#include "LimitedAttacks.as";
 #include "SpellCommon.as";
 
 const int LIFETIME = 4;
@@ -284,6 +284,8 @@ void makeSmokeParticle(CBlob@ this, const Vec2f vel, const string filename = "Sm
 	CParticle@ p = ParticleAnimated( "MissileFire1.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2, 0.0f, false );
 	if ( p !is null)
 	{
+		p.bounce = 0;
+    	p.fastcollision = true;
 		p.Z = 300.0f;
 	}
 	
@@ -322,6 +324,7 @@ void sparks(CBlob@ this, Vec2f pos, int amount)
 			{
 				p.timeout = 40 + _sprk_r.NextRanged(20);
 				p.scale = 0.5f + _sprk_r.NextFloat();
+    			p.fastcollision = true;
 				p.damping = 0.95f;
 				p.gravity = Vec2f(0,0);
 			}
@@ -333,6 +336,7 @@ void sparks(CBlob@ this, Vec2f pos, int amount)
 			{
 				p.timeout = 40 + _sprk_r.NextRanged(20);
 				p.scale = 0.5f + _sprk_r.NextFloat();
+    			p.fastcollision = true;
 				p.damping = 0.95f;
 				p.gravity = Vec2f(0,0);
 			}

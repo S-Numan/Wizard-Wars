@@ -776,7 +776,8 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 			
 			this.getSprite().PlaySound("forceofnature_start.ogg", 2.0f, 1.0f);
 		}
-
+		break;
+			
 		case 2029285710://zombie_rain
 		case 1033042153://skeleton_rain
 		case 1761466304://meteor_rain
@@ -796,7 +797,8 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 			
 			this.set_u8("spell_count", this.get_u8("spell_count") + 1);
 		}
-
+		break;
+			
 		default:
 		{
 			if (spell.type == SpellType::summoning)

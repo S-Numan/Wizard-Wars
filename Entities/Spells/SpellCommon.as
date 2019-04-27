@@ -11,7 +11,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 	//As an example with the meteor spell, i'd type out
 	//print('meteor_strike'.getHash()+'');
 	//then add whatever case with the hash
-print('meteor_strike'.getHash()+'');
+	//print('meteor_strike'.getHash()+'');
     string spellName = spell.typeName;
 	switch(spellName.getHash())
 	{
@@ -813,7 +813,7 @@ print('meteor_strike'.getHash()+'');
 			}
 			else
 			{
-				print("spell not found " +spellName +  " with spell name : " + spellName.getHash()+'' + " in file : spellCommon.as");
+				print("spell not found " + spellName +  " with spell hash : " + spellName.getHash()+'' + " in file : spellCommon.as");
 			}
 		}
 
@@ -958,7 +958,6 @@ void makeReviveParticles(CBlob@ this, const f32 velocity = 1.0f, const int small
 		
 		const f32 rad = 12.0f;
 		Vec2f random = Vec2f( XORRandom(128)-64, XORRandom(128)-64 ) * 0.015625f * rad;
-		CParticle@ p = ParticleAnimated( "MissileFire4.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.0f, false );
 		CParticle@ p = ParticleAnimated( "MissileFire4.png", this.getPosition() + random, Vec2f(0,0), float(XORRandom(360)), 1.0f, 2 + XORRandom(3), 0.0f, false );
 		if ( p !is null)
 		{

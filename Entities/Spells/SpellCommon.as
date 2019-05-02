@@ -17,7 +17,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 	{
 		case -1625426670: //orb
 		{
-			if (isClient()){
+			if (!isServer()){
            		return;
 			}
 
@@ -60,7 +60,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case 1463630946://spikedorb
 		{
-			if (isClient()){
+			if (!isServer()){
            		return;
 			}
 			f32 orbspeed = NecromancerParams::shoot_max_vel;
@@ -101,7 +101,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case 829656850: //sporeshot
 		{
-			if (isClient()){
+			if (!isServer()){
            		return;
 			}
 			f32 orbspeed = NecromancerParams::shoot_max_vel;
@@ -180,7 +180,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case 2016613317://firebomb
 		{
-			if (isClient()){
+			if (!isServer()){
            		return;
 			}
 			f32 orbspeed = NecromancerParams::shoot_max_vel*0.75f;
@@ -222,7 +222,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case 1174066691://fire_sprite
 		{
-			if(isClient()){
+			if(!isServer()){
 				return;
 			}
 			f32 orbDamage = 2.0f;
@@ -256,7 +256,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case 18140583://frost_ball
 		{
-			if (isClient()){
+			if (!isServer()){
            		return;
 			}
 			f32 orbspeed = 6.0f;
@@ -489,7 +489,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case 882940767://black_hole
 		{
-			if (isClient()){
+			if (!isServer()){
 				return;
 			}
 			f32 orbspeed = 6.0f;
@@ -632,7 +632,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 			Vec2f dirNorm = (targetPos - this.getPosition());
 			dirNorm.Normalize();
 			Vec2f orbPos = aimpos;	
-			if(isClient()){
+			if(!isServer()){
 				return;
 			}
 			CBlob@ orb = server_CreateBlob( "magic_barrier" ); 
@@ -714,7 +714,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 					CBlob@ zombie = zombies[i];
 					if ( zombie !is null && thisPlayer is zombie.getDamageOwnerPlayer() )
 					{
-						if ( getNet().isClient() )
+						if ( isClient() )
 							ParticleZombieLightning( zombie.getPosition() );
 						zombie.setPosition( thisPos );
 						zombie.setVelocity( Vec2f(0,0) );
@@ -724,7 +724,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 					//this.set_u8("spell_count", this.get_u8("spell_count") + 1);
 			}
 			
-			if (isClient())
+			if (!isServer())
 			{
 				this.getSprite().PlaySound("Summon1.ogg", 1.0f, 1.0f);
 				ParticleZombieLightning( thisPos );
@@ -789,7 +789,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 		case 1137221912://meteor_strike
 		case 1057572449://arrow_rain
 		{
-			if (isClient())
+			if (!isServer())
 			{
 				return;
 			}
@@ -823,7 +823,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 void SummonZombie(CBlob@ this, string name, Vec2f pos, int team)
 {
     ParticleZombieLightning( pos );
-    if (getNet().isServer())
+    if (isServer())
 	{
         CBlob@ summoned = server_CreateBlob( name, team, pos );
 		if ( summoned !is null )
@@ -947,7 +947,7 @@ void UnholyRes( CBlob@ blob )
 
 void makeReviveParticles(CBlob@ this, const f32 velocity = 1.0f, const int smallparticles = 12, const bool sound = true)
 {
-	if ( !getNet().isClient() )
+	if ( !isClient() )
 		return;
 		
 	//makeSmokeParticle(this, Vec2f(), "Smoke");
@@ -1022,7 +1022,7 @@ void counterSpell( CBlob@ blob )
 				
 				if ( countered == true )
 				{
-					if ( getNet().isClient() )
+					if ( isClient() )
 					{
 						Vec2f bPos = b.getPosition();
 						CParticle@ p = ParticleAnimated( "Flash2.png",
@@ -1045,7 +1045,7 @@ void counterSpell( CBlob@ blob )
 		}
 	}
 	
-	if ( getNet().isClient() )
+	if ( isClient() )
 	{
 		CParticle@ p = ParticleAnimated( "Shockwave2.png",
 						blob.getPosition(),
@@ -1099,7 +1099,7 @@ void Haste( CBlob@ blob, u16 hasteTime )
 Random _sprk_r2(12345);
 void teleSparks(Vec2f pos, int amount, Vec2f pushVel = Vec2f(0,0))
 {
-	if ( !getNet().isClient() )
+	if ( !isClient() )
 		return;
 
 	for (int i = 0; i < amount; i++)

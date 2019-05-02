@@ -112,11 +112,14 @@ class AchieveList : GenericGUIItem{
 
 
 	void startDisplay(Achievement@ achieve){
-		dropDownR = achieve.rarity;
+		Icon rarity  = achieve.rarity;//Required for a linux fix (on asu's build) caused by .rarity and others being const
+		Icon display = achieve.display;//^
+		Label desc   = achieve.desc;// ^
+		dropDownR = rarity;
 		dropDownR.localPosition =achieve.rarity.localPosition + Vec2f(0,30);
-		dropDownD = achieve.display;
+		dropDownD = display;
 		dropDownD.localPosition =achieve.display.localPosition + Vec2f(0,30);
-		dropDownL = achieve.desc;
+		dropDownL = desc;
 		dropDownL.localPosition = achieve.desc.localPosition + Vec2f(0,30);
 		dropDownL.size =achieve.desc.size + Vec2f(110,0);
 		dropDownL.setText(dropDownL.label + "\n"+ dropDownL.textWrap(achieve.description));

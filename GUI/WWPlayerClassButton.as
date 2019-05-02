@@ -164,7 +164,7 @@ class WWPlayerClassButtonList : GenericGUIItem
 	Button@ nextP = @Button(Vec2f(-520,0),Vec2f(30,30),"->",SColor(255,255,255,255)), prevP = @Button(Vec2f(-600,0),Vec2f(30,30),"<-",SColor(255,255,255,255));
 	Label@ pageNum = @Label(Vec2f(-568,4),Vec2f(30,10),"Page\n 1",SColor(255,0,0,0),false);
 	Label dropDownL;
-	Icon dropDownD, dropDownR;
+	Icon dropDownD,dropDownR;
 	Icon@ dropDownT = @Icon("GUI/achievement_get.png",Vec2f(45,3),Vec2f(157,25),0,0.5f);
 	List@ playerChooser = @List(Vec2f(0,0),Vec2f(300,30));
 	Button@ playerChooserArrow = @Button(Vec2f(-322,-430),Vec2f(30,30),"V",SColor(255,255,255,255));
@@ -231,11 +231,14 @@ class WWPlayerClassButtonList : GenericGUIItem
 
 	void startDisplay(WWPlayerClassButton@ classButton)
 	{
-		dropDownR = classButton.rarity;
+		Icon rarity  = classButton.rarity;//Required for a linux fix (on asu's build) caused by .rarity and others being const
+		Icon display = classButton.display;//^
+		Label desc   = classButton.desc;// ^
+		dropDownR = rarity;
 		dropDownR.localPosition = classButton.rarity.localPosition + Vec2f(0,30);
-		dropDownD = classButton.display;
+		dropDownD = display;
 		dropDownD.localPosition = classButton.display.localPosition + Vec2f(0,30);
-		dropDownL = classButton.desc;
+		dropDownL = desc;
 		dropDownL.localPosition = classButton.desc.localPosition + Vec2f(0,30);
 		dropDownL.size = classButton.desc.size + Vec2f(110,0);
 		dropDownL.setText(dropDownL.label + "\n"+ dropDownL.textWrap(classButton.description));

@@ -24,9 +24,17 @@ void onInit( CRules@ this )
 	setStartingPlatinum( this );
 	//setStartingUnlocks( this );
 }
-
+bool security_reloaded = false;
 void onNewPlayerJoin( CRules@ this, CPlayer@ player )
 {
+	//reload the seclevs shortly after a player joins once every new map to fix certain versions of windows preventing security to work
+	if(security_reloaded == false )
+	{
+		LoadSeclevs();
+		security_reloaded = true;	
+	}//Yes this is a bad way of doing it, i didn't want it every single next map so i settled for this. At least it works
+
+
 	string pName = player.getUsername();
 	u16 pPlatinum = server_getPlayerPlatinum( pName );
 	

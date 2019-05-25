@@ -811,6 +811,10 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 				Vec2f pos = aimpos + Vec2f(0.0f,-0.5f*this.getRadius());
 				SummonZombie(this, spellName, pos, this.getTeamNum());
 			}
+			else if ( spellName.getHash() == -2128831035)
+			{
+				//print("someone just used the blank spell :facepalm:");
+			}
 			else
 			{
 				print("spell not found " + spellName +  " with spell hash : " + spellName.getHash()+'' + " in file : spellCommon.as");

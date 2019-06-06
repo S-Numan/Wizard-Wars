@@ -346,12 +346,12 @@ void intitializeClasses()
 													"\n     Mana Regen: 0 mana/sec",
 													"knight", 2, 10, 0, 0, "WizardWars");
 
-	playerClassButtons.registerWWPlayerClassButton("Archer", 
+	/*playerClassButtons.registerWWPlayerClassButton("Archer", 
 													"     The most powerful class ever with over 1000 mana fit for taking on the Gods. Too bad they skipped magic class. " +
 													"\n\n     Health: 40" +
 													"\n     Mana: 1001" +
 													"\n     Mana Regen: 100 mana/sec",
-													"archer", 3, 20, 1, 0, "WizardWars");
+													"archer", 3, 20, 1, 0, "WizardWars");*/
 }
 
 void SwapButtonHandler(int x , int y , int button, IGUIItem@ sender)	//Button click handler for KGUI
@@ -742,10 +742,10 @@ void RenderClassMenus()		//very light use of KGUI
 			{
 			
 			}
-			else if ( iButton.name == "Archer" )
+			/*else if ( iButton.name == "Archer" )
 			{
 			
-			}
+			}*/
 			
 			break;
 		}

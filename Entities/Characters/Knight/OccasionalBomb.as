@@ -23,7 +23,7 @@ void onTick(CBlob@ this)
 	
 	s8 timeuntilbomb = this.get_s8("timetilbomb");
 	
-	if(timeuntilbomb >= 10)//If the time is right
+	if(timeuntilbomb >= 15)//If the time is right
 	{
 		if(this.getInventory().getItemsCount() < 4)//If there are are less than 4 things in the inventory
 		{

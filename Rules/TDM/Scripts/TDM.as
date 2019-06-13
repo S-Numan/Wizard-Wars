@@ -818,3 +818,34 @@ void onInit(CRules@ this)
 {
 	Reset(this);
 }
+
+void onPlayerLeave(CRules@ this, CPlayer@ player)
+{
+    uint team0 = 0;
+    uint team1 = 0;
+    for (u32 i = 0; i < getPlayersCount(); i++)
+    {
+        CPlayer@ p = getPlayer(i);
+        if (p !is null)
+        {
+            if (p.getTeamNum() == 0)
+                team0++;
+            else if (p.getTeamNum() == 1)
+                team1++;
+            else
+                continue;
+        }
+    }
+    bool lastteamplayer = false;
+    
+    if(player.getTeamNum() == 0 || player.getTeamNum() == 1)//If the player that just left was not a spectator
+    {
+        lastteamplayer = true;
+    }
+    if((team0 + team1 == 1 && lastteamplayer) || getPlayerCount() == 1)//Next map when the last player on a team leaves or the last player in the game leaves
+	{//We check for lastteamplayer to confirm that the player that left was not a spectator, if the player that left WAS a spectator the map would reset, it does this because we only check
+    //for the amount of players in the team, and this only checks onPlayerLeave so we need to make sure it was the last player in a team that left
+		print("Next mapping due to the last player on a team or last player on the server leaving");
+        LoadNextMap();
+	}
+}

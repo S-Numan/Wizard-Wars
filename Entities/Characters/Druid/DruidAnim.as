@@ -159,7 +159,7 @@ void onTick( CSprite@ this )
 	bool full_charge = druid.charge_state == DruidParams::extra_ready;
 	needs_shiny = spell_ready;
 	needs_shiny2 = druid.charge_state >= DruidParams::charging;
-    needs_damageboost = true;//blob.hasTag("extra_damage");
+    needs_damageboost = blob.hasTag("extra_damage");
 	bool crouch = false;
 
 	const u8 knocked = getKnocked(blob);

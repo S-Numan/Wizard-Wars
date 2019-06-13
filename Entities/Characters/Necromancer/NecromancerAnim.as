@@ -157,7 +157,7 @@ void onTick( CSprite@ this )
 	bool full_charge = necromancer.charge_state == NecromancerParams::extra_ready;
 	needs_shiny = spell_ready;
 	needs_shiny2 = necromancer.charge_state >= NecromancerParams::charging;
-	needs_damageboost = true;//blob.hasTag("extra_damage");
+	needs_damageboost = blob.hasTag("extra_damage");
     bool crouch = false;
 
 	const u8 knocked = getKnocked(blob);

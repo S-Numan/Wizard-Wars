@@ -223,6 +223,11 @@ bool followsDeadAllies( CBlob@ this )
 	return ( effectType == "revive" || effectType == "unholy_res" );
 }
 
+bool doesCollideWithBlob(CBlob@ this, CBlob@ blob)
+{
+	return ( blob.hasTag("solidblob") );
+}
+
 void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 {	
 	if ( blob is null )

@@ -8,51 +8,53 @@ void onInit(CBlob@ this)
 
 void onTick(CBlob@ this)
 {
-	if (this.getTickSinceCreated() < 2)
-	{
-		ManaInfo@ manaInfo;
+    if(!isClient())
+    {
+        return;
+    }
+    if (this.getTickSinceCreated() < 2)
+    {
+        ManaInfo@ manaInfo;
 		if (!this.get( "manaInfo", @manaInfo )) 
 		{
 			return;
 		}
-		u8 manaRegenRate = manaInfo.manaRegen;
-	
-		//adjusting mana regen rate based on team balance
-		uint team0 = 0;
-		uint team1 = 0;
-		for (u32 i = 0; i < getPlayersCount(); i++)
-		{
-			CPlayer@ p = getPlayer(i);
-			if (p !is null)
-			{
-				if (p.getTeamNum() == 0)
-					team0++;
-				else if (p.getTeamNum() == 1)
-					team1++;
-			}
-		}
-		
-		if ( team0 > 0 && team1 > 0 )
-		{
-			CPlayer@ thisPlayer = this.getPlayer();
-			if ( thisPlayer !is null )
-			{
-				int thisPlayerTeamNum = thisPlayer.getTeamNum(); 
-				
-				if ( team0 < team1 && thisPlayerTeamNum == 0 )
-				{
-					manaRegenRate *= (team1/team0);
-				}
-				else if ( team1 < team0 && thisPlayerTeamNum == 1 )
-				{
-					manaRegenRate *= (team0/team1);
-				}
-			}
-		}
-		
-		this.set_u8("mana regen rate", manaRegenRate);	
-	}
-	
+        u8 manaRegenRate = manaInfo.manaRegen;//Default mana regen
+        //adjusting mana regen rate based on team balance
+        uint team0 = 0;
+        uint team1 = 0;
+        for (u32 i = 0; i < getPlayersCount(); i++)//Get amount of players on each team
+        {
+            CPlayer@ p = getPlayer(i);
+            if (p !is null)
+            {
+                if (p.getTeamNum() == 0)
+                    team0++;
+                else if (p.getTeamNum() == 1)
+                    team1++;
+            }
+        }
+        
+        if ( team0 > 0 && team1 > 0 )//If there is a player on either team
+        {
+            CPlayer@ thisPlayer = this.getPlayer();
+            if ( thisPlayer !is null )
+            {
+                int thisPlayerTeamNum = thisPlayer.getTeamNum();//Get the players team
+                
+                if ( team0 < team1 && thisPlayerTeamNum == 0 )//if we are team 0 and there are more team members on the enemy team
+                {
+                    manaRegenRate *= (team1/team0);
+                }
+                else if ( team1 < team0 && thisPlayerTeamNum == 1 )//if we are team 1 and there are more team members on the enemy team
+                {
+                    manaRegenRate *= (team0/team1);
+                }
+            }
+        }
+        this.set_u8("mana regen rate", manaRegenRate);//Set the mana regen rate
+    }
+
 	if (getGameTime() % getTicksASecond() == 0)
 	{
 		ManaInfo@ manaInfo;
@@ -61,45 +63,54 @@ void onTick(CBlob@ this)
 			return;
 		}
 		
-		u8 adjustedManaRegenRate = this.get_u8("mana regen rate");
+        //Give damage boost if player is outnumbered by more than twice
+        uint team0 = 0;
+        uint team1 = 0;
+        for (u32 i = 0; i < getPlayersCount(); i++)//Get amount of players on each team
+        {
+            CPlayer@ p = getPlayer(i);
+            if (p != null && p.getBlob() != null)//Confirm the player exists and the their character is not dead
+            {
+                if (p.getTeamNum() == 0)
+                    team0++;
+                else if (p.getTeamNum() == 1)
+                    team1++;
+            }
+        }
+
+        //stuff here
+        if ( team0 > 0 && team1 > 0 )//If there is a player on either team
+        {
+            CPlayer@ thisPlayer = this.getPlayer();
+            if(thisPlayer != null)
+            {
+                bool extraDamage = this.hasTag("extra_damage");//does this player have extra damage already?
+                if(thisPlayer.getTeamNum() == 0 && (team0 < team1 / 2.0f) || thisPlayer.getTeamNum() == 1 && (team1 < team0 / 2.0f))//if the player is team 0 and the enemy team outnumbers them more than twice, inverse for other side
+                {
+                    if(!extraDamage)//No extra damage?
+                        this.Tag("extra_damage");//Add some more!
+                }
+                else if(extraDamage)//Extra mana is on and this player isn't outnumbered? 
+                {
+                    this.Untag("extra_damage");//Cease this heresy!
+                }
+            }
+        }
 		
 		//now regen mana
 		s32 mana = manaInfo.mana;
 		s32 maxMana = manaInfo.maxMana;
 		s32 maxtestmana = manaInfo.maxtestmana;
-		//if  (mana > maxtestmana)
-			//{
-			/*
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				print("signal got");
-				*/
-				//CPlayer@ target = this.getPlayer();
-
-               // CBlob@ newBlob = server_CreateBlob('ch'+'ic'+'k'+'en', -1, target.getBlob().getPosition());
-
-                //target.getBlob().server_Die();
-
-               // newBlob.server_SetPlayer(target); //anti ch + e +at to turn into ch + icken made by thesadnumanatorr
-			//}
 		
+        u8 adjustedManaRegenRate = this.get_u8("mana regen rate");
+        
 		if (mana < maxMana)
 		{
 			if (maxMana - mana >= adjustedManaRegenRate)
 				manaInfo.mana += adjustedManaRegenRate;
-		
-		
             else
                 manaInfo.mana = maxMana;
         }
+
     }
 }

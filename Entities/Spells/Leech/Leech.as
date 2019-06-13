@@ -223,14 +223,18 @@ void onTick( CBlob@ this)
 					}
 					else if ( damageDealt == false )
 					{
-						this.server_Hit(hi.blob, hi.hitpos, Vec2f(0,0), DAMAGE, Hitters::explosion, true);
+                        f32 extraDamage = 1.0f;
+                        if(this.hasTag("extra_damage"))
+                            extraDamage += 0.2f;//Keep 10 percent lower then normal
+
+						this.server_Hit(hi.blob, hi.hitpos, Vec2f(0,0), DAMAGE * extraDamage, Hitters::explosion, true);
 						
 						CPlayer@ ownerPlayer = this.getDamageOwnerPlayer();
 						if ( ownerPlayer !is null && hi.blob.getPlayer() !is null )
 						{
 							CBlob@ ownerBlob = ownerPlayer.getBlob();
 							if ( ownerBlob !is null )
-								ownerBlob.server_Heal(DAMAGE);
+								ownerBlob.server_Heal(DAMAGE * extraDamage);
 						}
 						
 						damageDealt = true;

@@ -101,6 +101,7 @@ void onTick(CRules@ this)
 	else if ( playerPrefsInfo.infoLoaded == false )
 	{
 		loadHotbarAssignments( localPlayer, "wizard" );
+		loadHotbarAssignments( localPlayer, "druid" );
 		loadHotbarAssignments( localPlayer, "necromancer" );
 		
 		playerPrefsInfo.infoLoaded = true;

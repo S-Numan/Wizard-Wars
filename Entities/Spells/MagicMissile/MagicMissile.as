@@ -285,8 +285,11 @@ void Explode( CBlob@ this )
 					Vec2f bPos = b.getPosition();
 					
 					if ( !map.rayCastSolid(thisPos, bPos) )
-						this.server_Hit(b, bPos, bPos-thisPos, 0.75f, Hitters::water, false);
-				}
+                    {
+                        float extraDamage = this.hasTag("extra_damage") ? 1.3f : 1.0f;
+						this.server_Hit(b, bPos, bPos-thisPos, 0.75f * extraDamage, Hitters::water, false);
+                    }
+                }
 			}
 		}
 	}

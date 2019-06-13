@@ -183,6 +183,9 @@ void onTick( CBlob@ this)
 		normal.Normalize();
 		
 		Sound::Play("lightning1.ogg", aimPos, 1.0f, 1.0f + XORRandom(5)/10.0f);
+
+        if(this.hasTag("extra_damage"))
+            this.server_SetTimeToDie(LIFETIME * 1.3f);
 		
 		this.set_bool("initialized", true);
 	}

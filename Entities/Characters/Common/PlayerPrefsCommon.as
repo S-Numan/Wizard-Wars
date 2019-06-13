@@ -1,11 +1,13 @@
 //Wizard Include
 #include "WizardCommon.as";
 #include "NecromancerCommon.as";
+#include "DruidCommon.as";
 #include "MagicCommon.as";
 
 const u8 MAX_SPELLS = 20;
 
 const u8 WIZARD_TOTAL_HOTKEYS = 18;
+const u8 DRUID_TOTAL_HOTKEYS = 18;
 const u8 NECROMANCER_TOTAL_HOTKEYS = 18;
 
 shared class PlayerPrefsInfo
@@ -18,6 +20,7 @@ shared class PlayerPrefsInfo
 	u8 primaryHotkeyID;
 	u8 customSpellID;
 	u8[] hotbarAssignments_Wizard;
+	u8[] hotbarAssignments_Druid;
 	u8[] hotbarAssignments_Necromancer;
 	
 	s32[] spell_cooldowns;
@@ -63,6 +66,12 @@ void assignHotkey( CPlayer@ this, const u8 hotkeyID, const u8 spellID, string pl
 		playerPrefsInfo.hotbarAssignments_Wizard[Maths::Min(hotkeyID,hotbarLength-1)] = spellID;
 		playerPrefsInfo.primarySpellID = playerPrefsInfo.hotbarAssignments_Wizard[Maths::Min(playerPrefsInfo.primaryHotkeyID,hotbarLength-1)];
 	}
+	else if ( playerClass == "druid" )
+	{
+		int hotbarLength = playerPrefsInfo.hotbarAssignments_Druid.length;
+		playerPrefsInfo.hotbarAssignments_Druid[Maths::Min(hotkeyID,hotbarLength-1)] = spellID;
+		playerPrefsInfo.primarySpellID = playerPrefsInfo.hotbarAssignments_Druid[Maths::Min(playerPrefsInfo.primaryHotkeyID,hotbarLength-1)];
+	}
 	else if ( playerClass == "necromancer" )
 	{
 		int hotbarLength = playerPrefsInfo.hotbarAssignments_Necromancer.length;
@@ -104,12 +113,35 @@ void defaultHotbarAssignments( CPlayer@ this, string playerClass )
 				playerPrefsInfo.hotbarAssignments_Wizard.push_back(3);	//assign aux2 to something
 		}	
 	}
+	if ( playerClass == "druid" )
+	{
+		playerPrefsInfo.hotbarAssignments_Druid.clear();
+		
+		int spellsLength = DruidParams::spells.length;
+		for (uint i = 0; i < DRUID_TOTAL_HOTKEYS; i++)
+		{
+			if ( i > spellsLength )
+			{
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(0);
+				continue;
+			}
+				
+			if ( i < 15 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(i);
+			else if ( i == 15 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(1);	//assign secondary to teleport
+			else if ( i == 16 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(2);	//assign aux1 to counter spell
+			else if ( i == 17 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(3);	//assign aux2 to something
+		}	
+	}
 	else if ( playerClass == "necromancer" )
 	{
 		playerPrefsInfo.hotbarAssignments_Necromancer.clear();
 		
 		int spellsLength = NecromancerParams::spells.length;
-		for (uint i = 0; i < WIZARD_TOTAL_HOTKEYS; i++)
+		for (uint i = 0; i < NECROMANCER_TOTAL_HOTKEYS; i++)
 		{
 			if ( i > spellsLength )
 			{
@@ -137,13 +169,18 @@ void saveHotbarAssignments( CPlayer@ this )
 		return;
 	}
 	
-	if (getNet().isClient())
+	if (isClient())
 	{
 		ConfigFile cfg;
 		
 		for (uint i = 0; i < playerPrefsInfo.hotbarAssignments_Wizard.length; i++)
 		{	
 			cfg.add_u32("wizard hotkey" + i, playerPrefsInfo.hotbarAssignments_Wizard[i]);
+		}
+		
+		for (uint i = 0; i < playerPrefsInfo.hotbarAssignments_Druid.length; i++)
+		{	
+			cfg.add_u32("druid hotkey" + i, playerPrefsInfo.hotbarAssignments_Druid[i]);
 		}
 		
 		for (uint i = 0; i < playerPrefsInfo.hotbarAssignments_Necromancer.length; i++)
@@ -186,7 +223,7 @@ void loadHotbarAssignments( CPlayer@ this, string playerClass )
 		}
 		
 		int hotbarLength = playerPrefsInfo.hotbarAssignments_Wizard.length;
-		if (getNet().isClient()) 
+		if (isClient()) 
 		{	
 			u8[] loadedHotkeys;
 			ConfigFile cfg;
@@ -209,12 +246,58 @@ void loadHotbarAssignments( CPlayer@ this, string playerClass )
 		
 		playerPrefsInfo.primarySpellID = playerPrefsInfo.hotbarAssignments_Wizard[Maths::Min(0,hotbarLength-1)];
 	}
+	else if ( playerClass == "druid" )
+	{
+		playerPrefsInfo.hotbarAssignments_Druid.clear();
+		
+		int spellsLength = DruidParams::spells.length;
+		for (uint i = 0; i < DRUID_TOTAL_HOTKEYS; i++)
+		{
+			if ( i == 15 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(1);	//assign secondary to teleport
+			else if ( i == 16 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(2);	//assign aux1 to counter spell
+			else if ( i == 17 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(3);	//assign aux2 to something
+			else if ( i >= spellsLength )
+			{
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(0);
+				continue;
+			}	
+			else if ( i < 15 )
+				playerPrefsInfo.hotbarAssignments_Druid.push_back(i);
+		}
+		
+		int hotbarLength = playerPrefsInfo.hotbarAssignments_Druid.length;
+		if (isClient()) 
+		{	
+			u8[] loadedHotkeys;
+			ConfigFile cfg;
+			if ( cfg.loadFile("../Cache/WW_PlayerPrefs.cfg") )
+			{
+				for (uint i = 0; i < playerPrefsInfo.hotbarAssignments_Druid.length; i++)
+				{		
+					if ( cfg.exists( "druid hotkey" + i ) )
+					{
+						u32 iHotkeyAssignment = cfg.read_u32("druid hotkey" + i);
+						loadedHotkeys.push_back( Maths::Min(iHotkeyAssignment, spellsLength-1) );
+					}
+					else
+						loadedHotkeys.push_back(0);
+				}
+				playerPrefsInfo.hotbarAssignments_Druid = loadedHotkeys;
+				print("Hotkey config file loaded.");
+			}
+		}
+		
+		playerPrefsInfo.primarySpellID = playerPrefsInfo.hotbarAssignments_Druid[Maths::Min(0,hotbarLength-1)];
+	}
 	else if ( playerClass == "necromancer" )
 	{
 		playerPrefsInfo.hotbarAssignments_Necromancer.clear();
 		
 		int spellsLength = NecromancerParams::spells.length;
-		for (uint i = 0; i < WIZARD_TOTAL_HOTKEYS; i++)
+		for (uint i = 0; i < NECROMANCER_TOTAL_HOTKEYS; i++)
 		{
 			if ( i == 15 )
 				playerPrefsInfo.hotbarAssignments_Necromancer.push_back(1);	//assign secondary to teleport
@@ -232,7 +315,7 @@ void loadHotbarAssignments( CPlayer@ this, string playerClass )
 		}
 		
 		int hotbarLength = playerPrefsInfo.hotbarAssignments_Necromancer.length;
-		if (getNet().isClient()) 
+		if (isClient()) 
 		{	
 			u8[] loadedHotkeys;
 			ConfigFile cfg;

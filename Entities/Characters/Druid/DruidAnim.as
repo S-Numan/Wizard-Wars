@@ -1,6 +1,6 @@
-// Necromancer animations
+// Druid animations
 
-#include "NecromancerCommon.as"
+#include "DruidCommon.as"
 #include "PlayerPrefsCommon.as"
 #include "MagicCommon.as";
 #include "FireParticle.as"
@@ -18,7 +18,7 @@ const string damageboost_layer2 = "damage boost 2";
 
 void onInit(CSprite@ this)
 {
-	RunnerTextures@ runner_tex = addRunnerTextures(this, "necromancer", "Necromancer");
+	RunnerTextures@ runner_tex = addRunnerTextures(this, "druid", "Druid");
 
 	LoadSprites(this);
 }
@@ -30,7 +30,7 @@ void onPlayerInfoChanged(CSprite@ this)
 
 void LoadSprites( CSprite@ this )
 {
-    string texname = "NecromancerMale.png";
+    string texname = "DruidMale.png";
     this.ReloadSprite( texname, this.getConsts().frameWidth, this.getConsts().frameHeight,
                        this.getBlob().getTeamNum(), this.getBlob().getSkinNum() );
     
@@ -81,6 +81,8 @@ void LoadSprites( CSprite@ this )
 	}
 }
 
+
+
 // stuff for shiny - global cause is used by a couple functions in a tick
 bool needs_shiny = false;
 bool needs_shiny2 = false;
@@ -123,8 +125,8 @@ void onTick( CSprite@ this )
         return;
     }
     
-    NecromancerInfo@ necromancer;
-	if (!blob.get( "necromancerInfo", @necromancer )) 
+    DruidInfo@ druid;
+	if (!blob.get( "druidInfo", @druid )) 
 	{
 		return;
 	}
@@ -142,7 +144,7 @@ void onTick( CSprite@ this )
 	}
 
 	// animations
-	int spellsLength = NecromancerParams::spells.length;
+	int spellsLength = DruidParams::spells.length;
 	const bool firing = blob.isKeyPressed(key_action1) || blob.isKeyPressed(key_action2);
 	const bool left = blob.isKeyPressed(key_left);
 	const bool right = blob.isKeyPressed(key_right);
@@ -151,14 +153,14 @@ void onTick( CSprite@ this )
 	const bool inair = (!blob.isOnGround() && !blob.isOnLadder());
 	bool spell_ready = false;
 	if (blob.isKeyPressed(key_action1))
-		spell_ready = NecromancerParams::spells[playerPrefsInfo.primarySpellID].needs_full ? necromancer.charge_state >= NecromancerParams::cast_3 : necromancer.charge_state >= NecromancerParams::cast_1;
+		spell_ready = DruidParams::spells[playerPrefsInfo.primarySpellID].needs_full ? druid.charge_state >= DruidParams::cast_3 : druid.charge_state >= DruidParams::cast_1;
 	else if (blob.isKeyPressed(key_action2))
-		spell_ready = NecromancerParams::spells[Maths::Min(playerPrefsInfo.hotbarAssignments_Necromancer[15], spellsLength-1)].needs_full ? necromancer.charge_state >= NecromancerParams::cast_3 : necromancer.charge_state >= NecromancerParams::cast_1;
-	bool full_charge = necromancer.charge_state == NecromancerParams::extra_ready;
+		spell_ready = DruidParams::spells[Maths::Min(playerPrefsInfo.hotbarAssignments_Druid[15], spellsLength-1)].needs_full ? druid.charge_state >= DruidParams::cast_3 : druid.charge_state >= DruidParams::cast_1;
+	bool full_charge = druid.charge_state == DruidParams::extra_ready;
 	needs_shiny = spell_ready;
-	needs_shiny2 = necromancer.charge_state >= NecromancerParams::charging;
-	needs_damageboost = true;//blob.hasTag("extra_damage");
-    bool crouch = false;
+	needs_shiny2 = druid.charge_state >= DruidParams::charging;
+    needs_damageboost = true;//blob.hasTag("extra_damage");
+	bool crouch = false;
 
 	const u8 knocked = getKnocked(blob);
 	const bool frozen = blob.get_bool("frozen");
@@ -187,15 +189,15 @@ void onTick( CSprite@ this )
 	{
 		if (inair)
 		{
-			this.SetAnimation("shoot_jump");
+			this.SetAnimation("jump");
 		}
 		else if ((left || right) ||
              (blob.isOnLadder() && (up || down) ) ) {
-			this.SetAnimation("shoot_run");
+			this.SetAnimation("run");
 		}
 		else
 		{
-			this.SetAnimation("shoot");
+			this.SetAnimation("fire");
 			if (spell_ready)
 				this.SetFrameIndex(1);
 		}
@@ -287,7 +289,7 @@ void onTick( CSprite@ this )
 		if(needs_damageboost)
 		{
 			damageboost.RotateBy(-5, Vec2f());
-			damageboost.SetOffset(Vec2f(0.0f,-1.0f));
+			damageboost.SetOffset(Vec2f(2.0f,-1.0f));
 		}
 	}
     CSpriteLayer@ damageboost2 = this.getSpriteLayer( damageboost_layer2 );
@@ -297,7 +299,7 @@ void onTick( CSprite@ this )
 		if(needs_damageboost)
 		{
 			damageboost2.RotateBy(4, Vec2f());
-			damageboost2.SetOffset(Vec2f(0.0f,-1.0f));
+			damageboost2.SetOffset(Vec2f(2.0f,-1.0f));
 		}
 	}
 

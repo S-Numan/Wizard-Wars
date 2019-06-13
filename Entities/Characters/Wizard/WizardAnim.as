@@ -13,6 +13,8 @@
 const f32 config_offset = -4.0f;
 const string shiny_layer = "shiny bit";
 const string shiny_layer2 = "shiny bit 2";
+const string damageboost_layer = "damage boost";
+const string damageboost_layer2 = "damage boost 2";
 
 void onInit(CSprite@ this)
 {
@@ -56,6 +58,27 @@ void LoadSprites( CSprite@ this )
 		shiny2.SetVisible(false);
 		shiny2.SetRelativeZ(8.0f);
 	}
+
+    this.RemoveSpriteLayer(damageboost_layer);
+	CSpriteLayer@ damageboost = this.addSpriteLayer( damageboost_layer, "DamageBoost.png", 32, 32 );
+
+	if (damageboost !is null)
+	{
+		damageboost.SetVisible(false);
+		damageboost.SetRelativeZ(-5.0f);
+	}
+    
+    this.RemoveSpriteLayer(damageboost_layer2);
+	CSpriteLayer@ damageboost2 = this.addSpriteLayer( damageboost_layer2, "DamageBoost.png", 32, 32 );
+
+	if (damageboost2 !is null)
+	{
+        Animation@ anim = damageboost2.addAnimation( "default", 0, false );
+		int[] frames = {1};
+		anim.AddFrames(frames);
+		damageboost2.SetVisible(false);
+        damageboost2.SetRelativeZ(-5.0f);
+	}
 }
 
 
@@ -63,6 +86,7 @@ void LoadSprites( CSprite@ this )
 // stuff for shiny - global cause is used by a couple functions in a tick
 bool needs_shiny = false;
 bool needs_shiny2 = false;
+bool needs_damageboost = false;
 f32 shiny_angle = 0.0f;
 
 void onTick( CSprite@ this )
@@ -82,7 +106,9 @@ void onTick( CSprite@ this )
 		{
 			this.SetAnimation("dead");
 			this.RemoveSpriteLayer(shiny_layer);
-		}
+            this.RemoveSpriteLayer(damageboost_layer);
+            this.RemoveSpriteLayer(damageboost_layer2);
+        }
         
         Vec2f vel = blob.getVelocity();
 
@@ -133,7 +159,8 @@ void onTick( CSprite@ this )
 	bool full_charge = wiz.charge_state == WizardParams::extra_ready;
 	needs_shiny = spell_ready;
 	needs_shiny2 = wiz.charge_state >= WizardParams::charging;
-	bool crouch = false;
+	needs_damageboost = true;//blob.hasTag("extra_damage");
+    bool crouch = false;
 
 	const u8 knocked = getKnocked(blob);
 	const bool frozen = blob.get_bool("frozen");
@@ -251,6 +278,27 @@ void onTick( CSprite@ this )
 			shiny2.RotateBy(10, Vec2f());
 				
 			shiny2.SetOffset(shiny_offset);
+		}
+	}
+    //Damage boost sprite
+    CSpriteLayer@ damageboost = this.getSpriteLayer( damageboost_layer );
+    if(damageboost !is null)
+    {
+		damageboost.SetVisible(needs_damageboost);
+		if(needs_damageboost)
+		{
+			damageboost.RotateBy(-5, Vec2f());
+			damageboost.SetOffset(Vec2f(2.0f,-1.0f));
+		}
+	}
+    CSpriteLayer@ damageboost2 = this.getSpriteLayer( damageboost_layer2 );
+    if(damageboost2 !is null)
+    {
+		damageboost2.SetVisible(needs_damageboost);
+		if(needs_damageboost)
+		{
+			damageboost2.RotateBy(4, Vec2f());
+			damageboost2.SetOffset(Vec2f(2.0f,-1.0f));
 		}
 	}
 

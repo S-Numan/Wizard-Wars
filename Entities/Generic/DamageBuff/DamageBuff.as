@@ -34,7 +34,7 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
 {
     if(isClient())
     {
-        if(blob.hasTag("player") && !blob.hasTag("extra_damage"))
+        if(blob.hasTag("player") && !blob.hasTag("extra_damage") && blob.getConfig() != "knight")
         {
             CBitStream params;
 	        this.SendCommand(this.getCommandID("die"), params);//kill serverside
@@ -50,6 +50,7 @@ void onCollision( CBlob@ this, CBlob@ blob, bool solid )
             this.getSprite().PlaySound("snes_coin.ogg", 0.8f, 1.0f);
             
             blob.Tag("extra_damage");
+            client_AddToChat("You now have increased damage for the remainder of this life.", SColor(255, 255, 0, 0));
         }
     }
 }

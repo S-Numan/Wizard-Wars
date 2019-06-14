@@ -10,10 +10,19 @@ void onInit(CRules@ this)
 		this.set_u32("game_end_time", 0);
 	if (!this.exists("end_in"))
 		this.set_u32("end_in", 0);
-    if(isServer())
-        this.set_u8("spawnbuff", 3);
+    onReset();
 }
-
+void onRestart( CRules@ this )
+{
+    onReset();
+}
+void onReset( CRules@ this)
+{
+    if(isServer())
+    {
+        this.set_u8("spawnbuff", 3);
+    }
+}
 void onTick(CRules@ this)
 {
 	if (!getNet().isServer() || !this.isMatchRunning() || this.get_bool("no timer"))

@@ -10,6 +10,8 @@ void onInit(CRules@ this)
 		this.set_u32("game_end_time", 0);
 	if (!this.exists("end_in"))
 		this.set_u32("end_in", 0);
+    if(isServer())
+        this.set_u8("spawnbuff", 3);
 }
 
 void onTick(CRules@ this)
@@ -25,6 +27,7 @@ void onTick(CRules@ this)
 
 	this.set_u32("end_in", (u32(gameEndTime) - u32(getGameTime())) / 30);
 	this.Sync("end_in", true);
+    u8 spawnbuff = this.get_u8("spawnbuff");
 
 	if (getGameTime() > gameEndTime)
 	{
@@ -54,9 +57,16 @@ void onTick(CRules@ this)
 			this.SetGlobalMessage("Time is up!\nIt's a tie!");
 		}
 
+        this.set_u8("spawnbuff", 3);
+
 		//GAME OVER
 		this.SetCurrentState(3);
 	}
+    else if(spawnbuff != 0 && getGameTime() > gameEndTime - 900 * spawnbuff)// 900 is 30 seconds
+    {
+        server_CreateBlob("damage_buff", 0, Vec2f(128 + XORRandom(getMap().getMapDimensions().x - 256), 0));//create damage buff at top of map 128 pixels away from the sides randomly
+        this.set_u8("spawnbuff", spawnbuff - 1);
+    }
 }
 
 void onRender(CRules@ this)

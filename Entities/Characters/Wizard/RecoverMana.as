@@ -61,40 +61,6 @@ void onTick(CBlob@ this)
 		if (!this.get( "manaInfo", @manaInfo )) 
 		{
 			return;
-		}
-		
-        //Give damage boost if player is outnumbered by more than twice
-        uint team0 = 0;
-        uint team1 = 0;
-        for (u32 i = 0; i < getPlayersCount(); i++)//Get amount of players on each team
-        {
-            CPlayer@ p = getPlayer(i);
-            if (p != null && p.getBlob() != null)//Confirm the player exists and the their character is not dead
-            {
-                if (p.getTeamNum() == 0)
-                    team0++;
-                else if (p.getTeamNum() == 1)
-                    team1++;
-            }
-        }
-
-        //stuff here
-        if ( team0 > 0 && team1 > 0 )//If there is a player on either team
-        {
-            CPlayer@ thisPlayer = this.getPlayer();
-            if(thisPlayer != null)
-            {
-                bool extraDamage = this.hasTag("extra_damage");//does this player have extra damage already?
-                if(thisPlayer.getTeamNum() == 0 && (team0 < team1 / 2.0f) || thisPlayer.getTeamNum() == 1 && (team1 < team0 / 2.0f))//if the player is team 0 and the enemy team outnumbers them more than twice, inverse for other side
-                {
-                    if(!extraDamage)//No extra damage?
-                        this.Tag("extra_damage");//Add some more!
-                }
-                else if(extraDamage)//Extra mana is on and this player isn't outnumbered? 
-                {
-                    this.Untag("extra_damage");//Cease this heresy!
-                }
-            }
         }
 		
 		//now regen mana

@@ -286,7 +286,7 @@ void Explode( CBlob@ this )
 					
 					if ( !map.rayCastSolid(thisPos, bPos) )
                     {
-                        float extraDamage = this.hasTag("extra_damage") ? 1.3f : 1.0f;
+                        float extraDamage = this.hasTag("extra_damage") ? 1.2f : 1.0f;
 						this.server_Hit(b, bPos, bPos-thisPos, 0.75f * extraDamage, Hitters::water, false);
                     }
                 }

@@ -343,17 +343,17 @@ void intitializeClasses()
 	
 	playerClassButtons.registerWWPlayerClassButton("Knight", 
 													"     A shit class really... All he can do is hack and slash. His shield is surprisingly quite ineffective. Maybe one day he will prove to be as great as the mighty wizard." +
-													"\n\n     Health: 80" +
+													"\n\n     Health: 60" +
 													"\n     Mana: 0" +
 													"\n     Mana Regen: 0 mana/sec",
 													"knight", 2, 10, 0, 0, "WizardWars");
-    //&& getSecurity().checkAccess_Command(getLocalPlayer(), "ALL"))//Safe keeping
-	playerClassButtons.registerWWPlayerClassButton("Druid", 
+
+	/*playerClassButtons.registerWWPlayerClassButton("Druid", 
 													"     Work In Progress. " +
 													"\n\n     Health: 70" +
 													"\n     Mana: 125" +
 													"\n     Mana Regen: 4 mana/sec",
-													"druid", 3, 20, 4, 0, "WizardWars");
+													"druid", 3, 20, 4, 0, "WizardWars");*/
 													
 	/*playerClassButtons.registerWWPlayerClassButton("Archer", 
 													"     The most powerful class ever with over 1000 mana fit for taking on the Gods. Too bad they skipped magic class. " +

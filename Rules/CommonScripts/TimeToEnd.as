@@ -10,11 +10,11 @@ void onInit(CRules@ this)
 		this.set_u32("game_end_time", 0);
 	if (!this.exists("end_in"))
 		this.set_u32("end_in", 0);
-    onReset();
+    onReset(this);
 }
 void onRestart( CRules@ this )
 {
-    onReset();
+    onReset(this);
 }
 void onReset( CRules@ this)
 {

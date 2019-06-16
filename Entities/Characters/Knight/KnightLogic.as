@@ -75,6 +75,15 @@ void onInit(CBlob@ this)
 		this.addCommandID("pick " + bombTypeNames[i]);
 	}
 
+    for(int i = 0; i < 2; i++)
+    {
+        CBlob @blob = server_CreateBlob("mat_bombs", this.getTeamNum(), this.getPosition());
+        if (blob != null)
+        {
+            this.server_PutInInventory(blob);
+        }
+    }
+
 	//centered on bomb select
 	//this.set_Vec2f("inventory offset", Vec2f(0.0f, 122.0f));
 	//centered on inventory

@@ -35,11 +35,12 @@ class NecromancerRain
     uint time;
     uint objectsAmount;
 
-    NecromancerRain(CBlob@ blob, u8 i_type, u8 i_level, Vec2f pos)
+    NecromancerRain(CBlob@ blob, u8 i_type, u8 i_level, Vec2f pos, bool extra_damage)
     {
         type = i_type;
         level = i_level;
         position = pos;
+        bool extra = extra_damage;
         team = blob.getTeamNum();
 
         if (type == NecromancerRainTypes::zombieRain)
@@ -78,6 +79,8 @@ class NecromancerRain
         else if (type == NecromancerRainTypes::skeletonRain)
         {
             objectsAmount = 5;
+            if(extra)
+                objectsAmount += 3;
             if (level == NecromancerParams::extra_ready)
                 objectsAmount += XORRandom(15);
             else if (level == NecromancerParams::cast_3)
@@ -91,6 +94,8 @@ class NecromancerRain
         else if (type == NecromancerRainTypes::arrowRain)
         {
             objectsAmount = 5;
+            if(extra)
+                objectsAmount += 3;
             if (level == NecromancerParams::extra_ready)
                 objectsAmount += 6;
             time = 1;
@@ -201,7 +206,7 @@ void onTick(CBlob@ this)
         rains[i].Manage(this);
 }
 
-void addRain(CBlob@ this, string type, u8 level, Vec2f pos)
+void addRain(CBlob@ this, string type, u8 level, Vec2f pos, bool extra_damage)
 {
     NecromancerRain[]@ rains;
     if (!this.get("necromancerRains", @rains)){
@@ -210,15 +215,15 @@ void addRain(CBlob@ this, string type, u8 level, Vec2f pos)
     if (!getNet().isServer())
         return;
     if (type == "zombie_rain")
-        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::zombieRain, level, pos));
+        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::zombieRain, level, pos, extra_damage));
     else if(type == "meteor_rain")
-        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::meteorRain, level, pos));
+        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::meteorRain, level, pos, extra_damage));
     else if(type == "meteor_strike")
-        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::meteorStrike, level, pos));
+        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::meteorStrike, level, pos, extra_damage));
     else if(type == "skeleton_rain")
-        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::skeletonRain, level, pos));
+        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::skeletonRain, level, pos, extra_damage));
     else if(type == "arrow_rain")
-        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::arrowRain, level, pos));
+        rains.insertLast(NecromancerRain(this, NecromancerRainTypes::arrowRain, level, pos, extra_damage));
 }
 
 void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
@@ -228,7 +233,8 @@ void onCommand( CBlob@ this, u8 cmd, CBitStream @params )
         string type = params.read_string();
         u8 charge_state = params.read_u8();
         Vec2f aimpos = params.read_Vec2f();
-        addRain(this, type, charge_state, aimpos);
+        bool extra_damage = params.read_bool();
+        addRain(this, type, charge_state, aimpos, extra_damage);
     }
 }
 

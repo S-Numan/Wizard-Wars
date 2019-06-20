@@ -1,5 +1,5 @@
 //Generic Magic Class Include
-//
+
 namespace SpellType
 {
 	enum type

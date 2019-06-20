@@ -64,9 +64,9 @@ namespace NecromancerParams
 				
 		Spell("force_of_nature", "Force of Nature", 27, "By invoking this spell, you call into being an orb of ghastly green light which destroys anything foolish enough to cross its path, including you!",
 				SpellType::other, 60, 10, 3, 360.0f, true),
-
-		Spell("", "", 0, "Empty spell.",
-				SpellType::other, 1, 1, 0, 0.0f),	
+				
+		Spell("arcane_circle","Arcane Circle",32,"Summon an unholy circle that will drain the life force of your foes",
+			SpellType::other,25,40,30,360,true),
 							
 		Spell("", "", 0, "Empty spell.",
 				SpellType::other, 1, 1, 0, 0.0f),	

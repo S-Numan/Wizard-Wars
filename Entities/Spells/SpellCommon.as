@@ -16,6 +16,17 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
     string spellName = spell.typeName;
 	switch(spellName.getHash())
 	{
+		case -1727909596: //arcane_circle
+			if(isServer())
+			{
+				CBlob@ circle = server_CreateBlob('arcane_circle',this.getTeamNum(),this.getAimPos());
+				circle.SetDamageOwnerPlayer(this.getPlayer());
+				if(charge_state == 5)//full charge
+				{
+					circle.Tag("fullCharge");
+				}
+			}
+		break;
 		case -1625426670: //orb
 		{
 			if (!isServer()){
@@ -143,7 +154,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 
 		case -377943487: //forceorb
 		{
-			f32 orbspeed = NecromancerParams::shoot_max_vel;
+			 f32 orbspeed = NecromancerParams::shoot_max_vel;
 			f32 orbDamage = 0.0f;
 
 			if (charge_state == NecromancerParams::cast_1) {
@@ -468,15 +479,15 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 			
 			if (isServer())
 			{
-				int numOrbs = 4;
-                if(this.hasTag("extra_damage"))
-                    numOrbs += 1;
-
+				const int numOrbs = 4;
 				for (int i = 0; i < numOrbs; i++)
 				{
 					CBlob@ orb = server_CreateBlob( "magic_missile", this.getTeamNum(), orbPos ); 
 					if (orb !is null)
 					{	
+                        if(this.hasTag("extra_damage"))
+                            orb.Tag("extra_damage");//Remember to change this in MagicMissile.as
+						
                         orb.IgnoreCollisionWhileOverlapped( this );
 						orb.SetDamageOwnerPlayer( this.getPlayer() );
 						Vec2f newVel = orbVel;
@@ -626,8 +637,6 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 		case -2014033180://magic_barrier
 		{
 			u16 lifetime = 20;
-            if(this.hasTag("extra_damage"))
-                lifetime += 5;
 
 			Vec2f targetPos = aimpos + Vec2f(0.0f,-2.0f);
 			Vec2f dirNorm = (targetPos - this.getPosition());
@@ -651,10 +660,8 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 		break;
 		
 		case 652962395:	//plant_aura
-		{
+		{			
 			u16 lifetime = 10;
-            if(this.hasTag("extra_damage"))
-                lifetime += 3;
 
 			u32 landheight = getLandHeight(aimpos);
 			if(landheight != 0)
@@ -666,6 +673,10 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 				
 				if (plant !is null)
 				{
+					if( charge_state == 5)//full charge
+					{
+						lifetime = 15;
+					}
 					//plant.IgnoreCollisionWhileOverlapped( this );
 					plant.set_u16("lifetime", lifetime);
 					plant.SetDamageOwnerPlayer( this.getPlayer() );
@@ -734,7 +745,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 								0.0f, true );
 				
 				Vec2f aimVector = aimpos - this.getPosition();
-			    Vec2f aimNorm = aimVector;
+				Vec2f aimNorm = aimVector;
 				aimNorm.Normalize();
 				
 				for (uint step = 0; step < aimVector.Length(); step += 8)
@@ -746,24 +757,13 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 				this.setVelocity( Vec2f_zero );
 				
 				ParticleAnimated( "Flash3.png",
-                                this.getPosition(),
-                                Vec2f(0,0),
-                                float(XORRandom(360)),
-                                1.0f, 
-                                3, 
-                                0.0f, true );
-
-                if(this.hasTag("extra_damage"))
-                {
-                    ParticleAnimated( "Flash2.png",
-                                    this.getPosition(),
-                                    Vec2f(0,0),
-                                    float(XORRandom(360)),
-                                    1.0f, 
-                                    3, 
-                                    0.0f, true );
-                }
-
+								this.getPosition(),
+								Vec2f(0,0),
+								float(XORRandom(360)),
+								1.0f, 
+								3, 
+								0.0f, true );     
+								
 				this.getSprite().PlaySound("Teleport.ogg", 0.8f, 1.0f);
 			}
 		}
@@ -792,7 +792,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 				}
 			}
 			
-			if (isClient())
+			if (!isServer())
 			{
 				this.getSprite().PlaySound("Summon1.ogg", 1.0f, 1.0f);
 				ParticleZombieLightning( thisPos );
@@ -844,9 +844,7 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 		case -1612772378://force_of_nature
 		{
 			int castTime = getGameTime();
-            if(this.hasTag("extra_damage"))
-                castTime -= 30;
-
+		
 			this.set_Vec2f("spell aim vec", aimpos - this.getPosition());
 			
 			this.Tag("in spell sequence");
@@ -871,7 +869,6 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
 			params.write_string(spellName);
 			params.write_u8(charge_state);
 			params.write_Vec2f(aimpos);
-            params.write_bool(this.hasTag("extra_damage"));
 
 			this.SendCommand(this.getCommandID("rain"), params);
 		}
@@ -906,21 +903,7 @@ void SummonZombie(CBlob@ this, string name, Vec2f pos, int team)
 		if ( summoned !is null )
 		{
 			summoned.SetDamageOwnerPlayer( this.getPlayer() );
-        }
-        //Extra
-        if(this.hasTag("extra_damage"))
-        {
-            int amount = 1;
-            if(name == "zombieknight")
-                amount += 2;
-
-            for(int i = 0; i < amount; i++)
-            {
-                CBlob@ extra_summoned = server_CreateBlob( "skeleton", team, pos );
-                if(extra_summoned != null)
-                    extra_summoned.SetDamageOwnerPlayer( this.getPlayer() );
-            }
-        }
+		}
 	}
 }
 

@@ -33,7 +33,7 @@ namespace NecromancerParams
 			SpellType::other, 15, 10, 0, 8.0f, true),
 			 
 		Spell("slow", "Slow", 19, "Deprive a player of his speed and ability to teleport for a few moments.",
-			SpellType::other, 18, 30, 5, 360.0f, true), 
+			SpellType::other, 25, 30, 0, 360.0f, true), 
 			 
 		Spell("zombie", "Summon Zombie", 2, "Summon an undead minion to fight by your side. Summons at the aim location.",
 			SpellType::summoning, 20, 10, 0, 64.0f, true),

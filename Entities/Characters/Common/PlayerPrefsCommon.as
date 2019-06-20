@@ -113,7 +113,7 @@ void defaultHotbarAssignments( CPlayer@ this, string playerClass )
 				playerPrefsInfo.hotbarAssignments_Wizard.push_back(3);	//assign aux2 to something
 		}	
 	}
-	if ( playerClass == "druid" )
+	else if ( playerClass == "druid" )
 	{
 		playerPrefsInfo.hotbarAssignments_Druid.clear();
 		

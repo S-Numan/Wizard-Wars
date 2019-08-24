@@ -2,7 +2,6 @@
 
 void onInit(CBlob@ this)
 {
-    this.getShape().SetGravityScale(0);
     this.SetLightRadius(effectRadius);
     this.SetLightColor(SColor(255,255,0,0));
     this.SetLight(true);
@@ -21,15 +20,9 @@ void onTick(CBlob@ this)
         this.add_s8("frame",this.hasTag("reverse") ? -1 : 1);
     }
     else this.Tag("built");
-
-    if(this.getTickSinceCreated() > (fullCharge ? 1350 : 900) ) //45 seconds if fully charged else 30 seconds
+    if(frame < 0 && this.hasTag("reverse"))
     {
-        this.Tag("reverse");
-        if(frame < 0)
-        {
-            this.server_Die();
-        }
-        return;
+        this.server_Die();
     }
 
     Vec2f pos = this.getInterpolatedPosition();
@@ -54,7 +47,6 @@ void onTick(CBlob@ this)
                 Vec2f pPos = pos + norm*j;
                 float rx = XORRandom(100)/100.0 - 0.5;
                 float ry = (XORRandom(100)/100.0)- 0.5;
-                //print(rx + "");
                 ParticleBlood(pPos,Vec2f(rx,ry),SColor(255,XORRandom(191) + 64,XORRandom(50),XORRandom(50)));
 
             }
@@ -90,7 +82,10 @@ const float rotateSpeed = 1;
 
 void onInit(CSprite@ this)
 {
-
+    CSpriteLayer@ s = this.addSpriteLayer("circle","team_color_circle.png",100,100);
+    s.setRenderStyle(RenderStyle::Style::light);
+    s.ScaleBy(Vec2f(1.562,1.562));
+    s.SetRelativeZ(-1);
     this.ScaleBy(Vec2f(1.4,1.4));
     //this.SetZ(0);
 
@@ -113,7 +108,7 @@ void onTick(CSprite@ this)
     }
     else
     {
-        this.RotateByDegrees(b.hasTag("fullCharge") ? rotateSpeed*2 : rotateSpeed,Vec2f(0,0));
+        this.RotateByDegrees((b.hasTag("fullCharge") ? rotateSpeed*2 : rotateSpeed) / (b.get_u8("despelled") + 1) ,Vec2f(0,0));
     }
 }
 

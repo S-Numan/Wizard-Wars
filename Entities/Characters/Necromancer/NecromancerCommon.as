@@ -66,7 +66,7 @@ namespace NecromancerParams
 				SpellType::other, 60, 10, 3, 360.0f, true),
 				
 		Spell("arcane_circle","Arcane Circle",32,"Summon an unholy circle that will drain the life force of your foes",
-			SpellType::other,25,40,30,360,true),
+			SpellType::other,45,40,30,360,true),
 							
 		Spell("", "", 0, "Empty spell.",
 				SpellType::other, 1, 1, 0, 0.0f),	

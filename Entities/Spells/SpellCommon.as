@@ -16,17 +16,61 @@ void CastSpell(CBlob@ this, const s8 charge_state, const Spell spell, Vec2f aimp
     string spellName = spell.typeName;
 	switch(spellName.getHash())
 	{
-		case -1727909596: //arcane_circle
-			if(isServer())
+		case -825046729: //mushroom
 			{
-				CBlob@ circle = server_CreateBlob('arcane_circle',this.getTeamNum(),this.getAimPos());
-				circle.SetDamageOwnerPlayer(this.getPlayer());
-				if(charge_state == 5)//full charge
+				CBlob@[] mushrooms;
+				getBlobsByName("mushroom",@mushrooms);
+
+				for(int i = 0; i < mushrooms.length; i++)
 				{
-					circle.Tag("fullCharge");
+					if(mushrooms[i].get_string("owner") == this.getPlayer().getUsername())
+					{
+						mushrooms[i].server_Die();
+						break;
+					}
+				}
+
+				int height = getLandHeight(aimpos);
+				if(height != 0)
+				{
+					if(isServer())
+					{
+						CBlob@ mush = server_CreateBlob("mushroom",this.getTeamNum(),Vec2f(aimpos.x,height) );
+						mush.SetDamageOwnerPlayer(this.getPlayer());
+						mush.set_string("owner",this.getPlayer().getUsername());
+						mush.set_s32("aliveTime",charge_state == 5 ? 1800 : 900); //if full charge last longer
+					}
+				}
+				else
+				{
+					ManaInfo@ manaInfo;
+					if (!this.get( "manaInfo", @manaInfo )) {
+						return;
+					}
+					
+					manaInfo.mana += spell.mana;
+					
+					this.getSprite().PlaySound("ManaStunCast.ogg", 1.0f, 1.0f);
 				}
 			}
 		break;
+
+		case -1727909596: //arcane_circle
+			if(isServer())
+			{
+				CBlob@ circle = server_CreateBlob('arcane_circle',this.getTeamNum(),aimpos);
+				circle.SetDamageOwnerPlayer(this.getPlayer());
+				circle.set_s32("aliveTime",charge_state == 5 ? 1350 : 900);
+			}
+		break;
+		case 750462252: //mana_drain_circle
+		if(isServer())
+		{
+			CBlob@ circle = server_CreateBlob("mana_drain_circle",this.getTeamNum(),aimpos);
+			circle.set_s32("aliveTime",charge_state == 5 ? 1350 : 900);
+		}
+		break;
+
 		case -1625426670: //orb
 		{
 			if (!isServer()){
@@ -1091,6 +1135,11 @@ void counterSpell( CBlob@ blob )
 					else
 						blob.server_Hit(b, blob.getPosition(), Vec2f(0, 0), 4.0f, Hitters::fire, true);
 					
+					countered = true;
+				}
+				else if(b.hasTag("circle"))
+				{
+					b.add_u8("despelled",1);
 					countered = true;
 				}
 				

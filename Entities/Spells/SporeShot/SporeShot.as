@@ -16,6 +16,8 @@ void onInit(CBlob@ this)
 	this.getShape().getConsts().bullet = true;
 }
 
+float homingRadius = 40;
+
 void onTick(CBlob@ this)
 {
 	if (this.getCurrentScript().tickFrequency == 1)
@@ -36,25 +38,23 @@ void onTick(CBlob@ this)
 		this.getCurrentScript().tickFrequency = 10;
 	}
 
+	CMap@ map = getMap();
+
+	CBlob@[] blobs; 
+	map.getBlobsInRadius(this.getPosition(),homingRadius,@blobs);
+
+	for(int i = 0; i < blobs.length; i++)
 	{
-		u16 id = this.get_u16("target");
-		if (id != 0xffff && id != 0)
+		if(isEnemy(this,blobs[i]))
 		{
-			CBlob@ b = getBlobByNetworkID(id);
-			if (b !is null)
-			{
-				Vec2f vel = this.getVelocity();
-				if (vel.LengthSquared() < 9.0f)
-				{
-					Vec2f dir = b.getPosition() - this.getPosition();
-					dir.Normalize();
+			Vec2f pos = this.getPosition();
+			Vec2f otherPos = blobs[i].getPosition();
+			Vec2f norm = otherPos - pos;
 
-
-					this.setVelocity(vel + dir * 3.0f);
-				}
-			}
+			this.setVelocity(this.getVelocity() + norm * 0.01);
 		}
 	}
+
 }
 
 bool isEnemy( CBlob@ this, CBlob@ target )

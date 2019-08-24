@@ -77,6 +77,7 @@ const Vec2f windowDimensions = Vec2f(1000,600); //temp
 	Button@ startCloseBtn;
 	Button@ achievementBtn;
 	Button@ classesBtn;
+    Button@ togglemenuBtn;
 	Rectangle@ optionsFrame;
 	Icon@ helpIcon;
 	ScrollBar@ particleCount;
@@ -94,6 +95,7 @@ bool isGUINull()
 		|| introBtn is null
 		|| optionsBtn is null
 		|| classesBtn is null
+        || togglemenuBtn is null
 		|| barNumBtn is null
 		|| startCloseBtn is null
 		|| achievementBtn is null
@@ -181,6 +183,10 @@ void ButtonClickHandler(int x , int y , int button, IGUIItem@ sender){ //Button 
 		shipAchievements.isEnabled = false;
 		playerClassButtons.isEnabled = true;
 	}
+    if(sender is togglemenuBtn){
+        showHelp = !showHelp;
+    }
+
 	if (sender is barNumBtn){
 		barNumBtn.toggled = !barNumBtn.toggled;
 		barNumBtn.desc = (barNumBtn.toggled) ? "Bar Numbers Enabled" : "Bar Numbers Disabled";
@@ -223,7 +229,7 @@ void onTick( CRules@ this )
 		changeBtn.addClickListener(ButtonClickHandler);
 
 		@introText  = @Label(Vec2f(20,10),Vec2f(780,15),"",SColor(255,0,0,0),false);
-		introText.setText(introText.textWrap("Welcome to Wizard Wars, a mod created by Chrispin with help from The Sopranos and other community members! (Press F1 to close this window)"));
+		introText.setText(introText.textWrap("Welcome to Wizard Wars, a mod created by Chrispin with help from The Sopranos and \nother community members! (Press F1 to close this window)"));
 		@introBtn = @Button(Vec2f(5,495),Vec2f(100,30),"Home Page",SColor(255,255,255,255));
 		introBtn.addClickListener(ButtonClickHandler);
 
@@ -245,6 +251,9 @@ void onTick( CRules@ this )
 		@classesBtn = @Button(Vec2f(550,495),Vec2f(120,30),"Classes Menu",SColor(255,255,255,255));
 		classesBtn.addClickListener(ButtonClickHandler);
 
+        @togglemenuBtn = @Button(Vec2f(702,06),Vec2f(90,30),"Exit Menu",SColor(255,255,255,255));//How do close menu? durp. The pain i have gone through has warrented this.
+		togglemenuBtn.addClickListener(ButtonClickHandler);
+
 		@optionsFrame = @Rectangle(Vec2f(20,10),Vec2f(760,490), SColor(0,0,0,0));
 
 		@particleCount = @ScrollBar(Vec2f(10,105),80,4,true,2);
@@ -263,7 +272,8 @@ void onTick( CRules@ this )
 		helpWindow.addChild(optionsFrame);
 		helpWindow.addChild(achievementBtn);
 		helpWindow.addChild(classesBtn);
-		optionsFrame.addChild(barNumBtn);
+		helpWindow.addChild(togglemenuBtn);
+        optionsFrame.addChild(barNumBtn);
 		optionsFrame.addChild(startCloseBtn);
 		optionsFrame.addChild(particleCount);
 		optionsFrame.addChild(particleText);

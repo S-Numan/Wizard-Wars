@@ -52,7 +52,7 @@ void onTick(CBlob@ this)
 		if (attractedblob is null)
 			continue;
 		
-		if ( (attractedblob.getTeamNum() != this.getTeamNum() && !attractedblob.hasTag("dead"))
+		if ( ((attractedblob.getTeamNum() != this.getTeamNum() || attractedblob.getConfig() == "arcane_circle") && !attractedblob.hasTag("dead"))
 				|| (attractedblob.hasTag("black hole")) )
 		{
 			Vec2f blobPos = attractedblob.getPosition();

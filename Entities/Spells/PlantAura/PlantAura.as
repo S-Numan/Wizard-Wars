@@ -9,12 +9,25 @@ void onInit(CBlob@ this)
 	shape.getConsts().collidable = false;
 	
 	this.Tag("counterable");
+
+	this.set_u8("frame",0);
 }
 
 float effectRadius = 8*5;
 
 void onTick( CBlob@ this )
 {
+
+	if(getControls().isKeyPressed(KEY_KEY_K))
+	{
+		this.set_u8("frame",0);
+	}
+	if(this.get_u8("frame") < 38 && getGameTime() % 3 == 0)
+	{
+		this.getSprite().SetFrame(this.add_u8("frame",1));
+	}
+
+
 	if (this.getTickSinceCreated() < 1)
 	{		
 		//this.getSprite().PlaySound("rock_hit3.ogg", 1.0f, 1.0f);	
@@ -38,7 +51,18 @@ void onTick( CBlob@ this )
 			CBlob@ b = blobs[i];
 			if(b.getPlayer() !is null && b.getTeamNum() == this.getTeamNum())
 			{
+				f32 initHealth = b.getInitialHealth();
+				f32 health = b.getHealth();
 
+				if(health + 0.1 < initHealth)
+				{
+					b.server_SetHealth(health + 0.1);
+					if(b.getPlayer() !is null && b.getPlayer() is getLocalPlayer())
+					{
+						SetScreenFlash(50,0,255,0,0.75f);
+					}
+				}
+				else b.server_SetHealth(initHealth);
 			}
 		}
 	}
@@ -46,8 +70,51 @@ void onTick( CBlob@ this )
 
 }
 
+void onInit(CSprite@ this)
+{
+	CBlob@ blob = this.getBlob();
+	CMap@ map = getMap();
+
+	for(int i = 0; i < 6; i++)
+	{
+		Vec2f pos = blob.getPosition() - Vec2f(-20 + (i * 8),0);
+		if(!map.isTileSolid(pos) && map.isTileSolid(pos + Vec2f(0,8)) )
+		{
+			CSpriteLayer@ s = this.addSpriteLayer("" + i,"plant_aura2.png",10,18);
+			s.SetOffset(Vec2f(-20 + (i * 8),0));
+			s.SetRelativeZ(i);
+		}
+	}
+
+	for(int i = 0; i < 10; i++)
+	{	
+		CSpriteLayer@ s = this.addSpriteLayer("flower" + i,"Flowers.png",16,16,XORRandom(6),0);
+		int xOff = XORRandom(effectRadius) - effectRadius/2;
+		s.SetOffset(Vec2f(xOff,7) );
+		s.SetFrame(XORRandom(3) +4);
+		s.SetRelativeZ(-1 * i);
+	}
+}
+
 void onTick(CSprite@ this)
 {
+	this.SetVisible(false);
+
+	for(int i = 0; i < 6; i ++)
+	{
+		CSpriteLayer@ s = this.getSpriteLayer(i + "");
+		if(s !is null)
+			s.SetFrame(this.getBlob().get_u8("frame"));
+	}
+
+	for(int i = 0; i < 10; i++)
+	{
+		CSpriteLayer@ s = this.getSpriteLayer("flower" + i);
+		s.SetOffset(s.getOffset() + Vec2f(0,XORRandom(2) == 0 ? 0.05 : -0.05 ) );
+	}
+	
+
+
 	CBlob@[] plants;
 	getBlobsByName("plant_aura",@plants);
 
@@ -68,7 +135,6 @@ void onTick(CSprite@ this)
 		Vec2f pos = blob.getPosition() + Vec2f_lengthdir(effectRadius,i);//game time gets rid of some gaps and can add a rotation effect
 		ParticlePixel(pos,Vec2f_zero, color,true,1);
 	}
-
 }
 
 void onDie(CBlob@ this)

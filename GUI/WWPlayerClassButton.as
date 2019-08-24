@@ -336,7 +336,7 @@ void intitializeClasses()
 	
 	playerClassButtons.registerWWPlayerClassButton("Necromancer", 
 													"     A spell-caster who is able to summon the undead and specializes in dark magic. Takes on the role of AOE damage support, but can hold his own in combat." +
-													"\n\n     Health: 100" +
+													"\n\n     Health: 75" +
 													"\n     Mana: 100" +
 													"\n     Mana Regen: 4 mana/sec", 
 													"necromancer", 1, 0, 3, 5, "WizardWars");
@@ -351,8 +351,8 @@ void intitializeClasses()
 	playerClassButtons.registerWWPlayerClassButton("Druid", 
 													"     Work In Progress. " +
 													"\n\n     Health: 70" +
-													"\n     Mana: 125" +
-													"\n     Mana Regen: 4 mana/sec",
+													"\n     Mana: 100" +
+													"\n     Mana Regen: 3 mana/sec",
 													"druid", 3, 20, 4, 0, "WizardWars");
 													
 	/*playerClassButtons.registerWWPlayerClassButton("Archer", 

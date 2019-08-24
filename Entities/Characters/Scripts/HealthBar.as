@@ -16,7 +16,7 @@ void onRender(CSprite@ this)
 	{
 		
 		//show health
-		if (mouseOnBlob)
+		if (mouseOnBlob || getLocalPlayerBlob() is null)
 		{
 			Vec2f pos2d = blob.getScreenPos() + Vec2f(0, 20);
 			Vec2f dim = Vec2f(24, 8);
@@ -57,3 +57,4 @@ void onRender(CSprite@ this)
 		
 	}
 }
+

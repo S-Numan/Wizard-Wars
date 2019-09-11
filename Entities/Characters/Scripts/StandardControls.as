@@ -229,7 +229,7 @@ void onTick(CBlob@ this)
 
 	if (this.isKeyJustPressed(key_bubbles))
 	{
-		this.CreateBubbleMenu();
+		//this.CreateBubbleMenu();
 		Tap(this);
 	}
 

@@ -81,6 +81,8 @@ void onSetPlayer( CRules@ this, CBlob@ blob, CPlayer@ player )//Selects the spel
     uint spells_length;
     uint i;
 
+    WheelMenu@ menu = get_wheel_menu("spells");
+
     uint8 _class;
     if(blob_name == "wizard")
     {
@@ -99,11 +101,13 @@ void onSetPlayer( CRules@ this, CBlob@ blob, CPlayer@ player )//Selects the spel
     }
     else
     {
+        menu.option_notice = getTranslatedString("");
+        menu.for_spells = true;
+        menu.entries.resize(0);
         return;
     }
 
     
-    WheelMenu@ menu = get_wheel_menu("spells");
     menu.option_notice = getTranslatedString("Select a spell");
     menu.for_spells = true;
     menu.entries.resize(0);
@@ -160,17 +164,16 @@ void onTick(CRules@ rules)
 
     WheelMenu@ menu;
 
-    if(usespellwheel == true)
+    if(usespellwheel)
     {
         @menu = get_wheel_menu("spells");
         if(menu.entries == null || menu.entries.length() == 0)
         {
-            print("In EmoteMenu.as spell length is equal to zero");
-            return;
+            //print("In EmoteMenu.as spell length is equal to zero");
+            usespellwheel = false;//No entries? no Spells? nothing to display? just use the emotes menu instead    
         }
-
     }
-    else
+    if(!usespellwheel)
     {
         @menu = get_wheel_menu("emotes");
     }

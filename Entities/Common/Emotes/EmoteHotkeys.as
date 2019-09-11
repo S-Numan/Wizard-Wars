@@ -73,30 +73,41 @@ void onTick(CBlob@ this)
 	}
 
 	CControls@ controls = getControls();
-    if(!getRules().get_bool("hotkey_emotes") == true)
-    {
-
-    }
-	else if (controls.isKeyJustPressed(KEY_KEY_1))
+    if (controls.isKeyJustPressed(KEY_KEY_1))//While this may look bad, it only does this if the statement on the left is true. this in theory is not done over and over
 	{
-		set_emote(this, emote_1);
-	}
+        if(getRules().get_bool("hotkey_emotes"))
+        {
+		    set_emote(this, emote_1);
+        }
+    }
 	else if (controls.isKeyJustPressed(KEY_KEY_2))
 	{
-		set_emote(this, emote_2);
-	}
+        if(getRules().get_bool("hotkey_emotes"))
+        {
+	    	set_emote(this, emote_2);
+        }
+    }
 	else if (controls.isKeyJustPressed(KEY_KEY_3))
 	{
-		set_emote(this, emote_3);
-	}
+        if(getRules().get_bool("hotkey_emotes"))
+        {
+		    set_emote(this, emote_3);
+        }
+    }
 	else if (controls.isKeyJustPressed(KEY_KEY_4))
 	{
-		set_emote(this, emote_4);
-	}
+        if(getRules().get_bool("hotkey_emotes"))
+        {
+		    set_emote(this, emote_4);
+        }
+    }
 	else if (controls.isKeyJustPressed(KEY_KEY_5))
 	{
-		set_emote(this, emote_5);
-	}
+        if(getRules().get_bool("hotkey_emotes"))
+        {
+	    	set_emote(this, emote_5);
+        }
+    }
 	else if (controls.isKeyJustPressed(KEY_KEY_6))
 	{
 		set_emote(this, emote_6);

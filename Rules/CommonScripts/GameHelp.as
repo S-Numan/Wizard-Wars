@@ -78,12 +78,12 @@ const Vec2f windowDimensions = Vec2f(1000,600); //temp
 	Button@ introBtn;
 	Button@ optionsBtn;
 	Button@ barNumBtn;
-	Button@ startCloseBtn;
-    Button@ toggleSpellWheelBtn;
+	Button@ startCloseBtn;//Start the menu closed
+    Button@ toggleSpellWheelBtn;//Toggle the wheel to be a spell wheel or a emote wheel
 	Button@ achievementBtn;
 	Button@ classesBtn;
     Button@ togglemenuBtn;
-    Button@ toggleHotkeyEmotesBtn;
+    Button@ toggleHotkeyEmotesBtn;//Toggles 1-5 emotes (pressing 1 2 3 4 and 5 on the keyboard shows the emotes, this can disable that)
 	Rectangle@ optionsFrame;
 	Icon@ helpIcon;
 	ScrollBar@ particleCount;
@@ -228,7 +228,7 @@ void ButtonClickHandler(int x , int y , int button, IGUIItem@ sender){ //Button 
     if (sender is toggleHotkeyEmotesBtn)
     {
         toggleHotkeyEmotesBtn.toggled = !toggleHotkeyEmotesBtn.toggled;
-		toggleHotkeyEmotesBtn.desc = (toggleHotkeyEmotesBtn.toggled) ? "Hotkey Emotes Enabled" : "Hotkey Emotes Disabled";
+		toggleHotkeyEmotesBtn.desc = (toggleHotkeyEmotesBtn.toggled) ? "1-5 Emotes Enabled" : "1-5 Emotes Disabled";
 		toggleHotkeyEmotesBtn.saveBool("Hotkey Emotes", toggleHotkeyEmotesBtn.toggled,"WizardWars");
         
         getRules().set_bool("hotkey_emotes", toggleHotkeyEmotesBtn.toggled);
@@ -330,11 +330,11 @@ void onTick( CRules@ this )
 		particleCount.addSlideEventListener(SliderClickHandler);
 
 		@itemDistance = @ScrollBar(Vec2f(10,350),160,10,true, itemDistance_value);
-		@itemDistanceText = @Label(Vec2f(10,330),Vec2f(100,10),"Item distance:",SColor(255,0,0,0),false);
+		@itemDistanceText = @Label(Vec2f(10,335),Vec2f(100,10),"Item distance:",SColor(255,0,0,0),false);
 		itemDistance.addSlideEventListener(SliderClickHandler);
 
         @hoverDistance = @ScrollBar(Vec2f(10,400),160,10,true, hoverDistance_value);
-		@hoverDistanceText = @Label(Vec2f(10,380),Vec2f(100,10),"Hover distance:",SColor(255,0,0,0),false);
+		@hoverDistanceText = @Label(Vec2f(10,385),Vec2f(100,10),"Hover distance:",SColor(255,0,0,0),false);
 		hoverDistance.addSlideEventListener(SliderClickHandler);
 
 		//---KGUI Parenting---\\
@@ -373,7 +373,7 @@ void onTick( CRules@ this )
         }
 
         toggleHotkeyEmotesBtn.toggled = toggleHotkeyEmotesBtn.getBool("Hotkey Emotes","WizardWars");
-		toggleHotkeyEmotesBtn.desc = (toggleHotkeyEmotesBtn.toggled) ? "Hotkey Emotes Enabled" : "Hotkey Emotes Disabled";
+		toggleHotkeyEmotesBtn.desc = (toggleHotkeyEmotesBtn.toggled) ? "1-5 Emotes Enabled" : "1-5 Emotes Disabled";
         this.set_bool("hotkey_emotes", toggleHotkeyEmotesBtn.toggled);
 
 

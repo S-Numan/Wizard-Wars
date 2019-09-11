@@ -238,7 +238,7 @@ class WheelMenu
         float _multiplier = 2.0f;
         if(for_spells == true)
         {
-            _multiplier = 4.0f;
+            _multiplier = 3.5f;
         }
 		Vec2f pane_size(WheelMenu::center_pane_min_width, WheelMenu::center_pane_padding.y * _multiplier);
 		pane_size = extend_pane(pane_size, hover_text);
@@ -248,7 +248,7 @@ class WheelMenu
 
         if(for_spells == true)
         {
-		    GUI::DrawTextCentered(option_notice, origin - WheelMenu::center_pane_text_margin - WheelMenu::center_pane_text_margin - WheelMenu::center_pane_text_margin - WheelMenu::center_pane_text_margin
+		    GUI::DrawTextCentered(option_notice, origin - Vec2f(WheelMenu::center_pane_text_margin.x, WheelMenu::center_pane_text_margin.y * 3.7)
             // - Numan todo, figure out how to times vectors 
             , WheelMenu::pane_title_color);
         
